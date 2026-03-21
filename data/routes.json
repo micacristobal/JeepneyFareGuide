@@ -1,0 +1,53 @@
+{
+  "fare_by_km": {
+    "0": 13,
+    "1": 13,
+    "2": 13,
+    "3": 13,
+    "4": 13,
+    "5": 14,
+    "6": 15,
+    "7": 16,
+    "8": 17,
+    "9": 18,
+    "10": 19,
+    "11": 20,
+    "12": 22
+  },
+  "routes": {
+    "sm_to_sj": [
+      {"name": "SM San Mateo", "km": 0},
+      {"name": "Ampid", "km": 1},
+      {"name": "Paraiso", "km": 2},
+      {"name": "Guitnang Bayan", "km": 3},
+      {"name": "Dulong Bayan", "km": 4},
+      {"name": "Patiis", "km": 4},
+      {"name": "Guinayang", "km": 5},
+      {"name": "Maly", "km": 6},
+      {"name": "Gold River", "km": 6},
+      {"name": "Inares", "km": 7},
+      {"name": "Montana", "km": 8},
+      {"name": "Burgos", "km": 9},
+      {"name": "Manggahan", "km": 10},
+      {"name": "Highway", "km": 11},
+      {"name": "San Jose", "km": 12}
+    ],
+    "sj_to_sm": [
+      {"name": "San Jose", "km": 0},
+      {"name": "Highway", "km": 1},
+      {"name": "Manggahan", "km": 2},
+      {"name": "Burgos", "km": 3},
+      {"name": "Maly", "km": 4},
+      {"name": "Guinayang", "km": 4},
+      {"name": "Malanday", "km": 5},
+      {"name": "Patiis", "km": 6},
+      {"name": "Dulong Bayan", "km": 7},
+      {"name": "Guitnang Bayan", "km": 8},
+      {"name": "Plaza", "km": 9},
+      {"name": "Paraiso", "km": 10},
+      {"name": "Tulay", "km": 10},
+      {"name": "Ampid", "km": 11},
+      {"name": "SM San Mateo", "km": 12}
+    ]
+  }
+}

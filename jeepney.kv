@@ -1,0 +1,368 @@
+#:set peach_light (1, 0.92, 0.88, 1)
+#:set peach (1, 0.84, 0.74, 1)
+#:set peach_dark (0.96, 0.72, 0.6, 1)
+#:set peach_border (0.9, 0.6, 0.5, 1)
+#:import dp kivy.metrics.dp
+#:set tile_size "92dp"
+
+RootManager:
+    StartScreen:
+    FareScreen:
+
+<StartScreen>:
+    name: "start"
+    BoxLayout:
+        orientation: "vertical"
+        padding: "20dp"
+        spacing: "16dp"
+        canvas.before:
+            Color:
+                rgba: peach_light
+            Rectangle:
+                pos: self.pos
+                size: self.size
+            Color:
+                rgba: peach
+            Rectangle:
+                pos: self.pos[0], self.pos[1] + self.height * 0.45
+                size: self.size[0], self.height * 0.55
+        Label:
+            text: "JEEPNEY FARE GUIDE"
+            font_size: "26sp"
+            color: 0, 0, 0, 1
+            size_hint_y: 0.4
+        Button:
+            text: "START"
+            size_hint: 1, None
+            height: "48dp"
+            background_color: 0, 0, 0, 0
+            color: 0, 0, 0, 1
+            font_size: "16sp"
+            on_release: app.root.current = "fare"
+            on_press: app.animate_press(self)
+            canvas.before:
+                Color:
+                    rgba: peach
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [self.height * 0.25, self.height * 0.25, self.height * 0.25, self.height * 0.25]
+            canvas.after:
+                Color:
+                    rgba: peach_border
+                Line:
+                    width: 1
+                    rounded_rectangle: self.x, self.y, self.width, self.height, self.height * 0.25
+
+<PlaceButton>:
+    size_hint: 1, 1
+    background_color: 0, 0, 0, 0
+    color: 0, 0, 0, 1
+    font_size: "11sp"
+    text_size: self.width - dp(8), self.height - dp(8)
+    halign: "center"
+    valign: "middle"
+    on_press: app.animate_press(self)
+    canvas.before:
+        Color:
+            rgba: (0.98, 0.78, 0.66, 1) if self.state == "down" else peach
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [self.height * 0.25, self.height * 0.25, self.height * 0.25, self.height * 0.25]
+    canvas.after:
+        Color:
+            rgba: peach_border
+        Line:
+            width: 1
+            rounded_rectangle: self.x, self.y, self.width, self.height, self.height * 0.25
+
+<FareTypeButton@ToggleButton>:
+    background_color: 0, 0, 0, 0
+    color: 0, 0, 0, 1
+    font_size: "12sp"
+    on_press: app.animate_press(self)
+    canvas.before:
+        Color:
+            rgba: (0.98, 0.78, 0.66, 1) if self.state == "down" else peach
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [self.height * 0.25, self.height * 0.25, self.height * 0.25, self.height * 0.25]
+    canvas.after:
+        Color:
+            rgba: peach_border
+        Line:
+            width: 1
+            rounded_rectangle: self.x, self.y, self.width, self.height, self.height * 0.25
+
+<FareScreen>:
+    name: "fare"
+    BoxLayout:
+        orientation: "vertical"
+        padding: "12dp"
+        spacing: "8dp"
+        canvas.before:
+            Color:
+                rgba: peach_light
+            Rectangle:
+                pos: self.pos
+                size: self.size
+            Color:
+                rgba: peach
+            Rectangle:
+                pos: self.pos
+                size: self.size[0], self.height * 0.25
+        BoxLayout:
+            size_hint_y: None
+            height: "40dp"
+            spacing: "6dp"
+            Button:
+                text: "BACK"
+                size_hint_x: None
+                width: "76dp"
+                background_color: 0, 0, 0, 0
+                color: 0, 0, 0, 1
+                font_size: "14sp"
+                on_release: app.root.current = "start"
+                on_press: app.animate_press(self)
+                canvas.before:
+                    Color:
+                        rgba: peach
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [self.height * 0.25, self.height * 0.25, self.height * 0.25, self.height * 0.25]
+                canvas.after:
+                    Color:
+                        rgba: peach_border
+                    Line:
+                        width: 1
+                        rounded_rectangle: self.x, self.y, self.width, self.height, self.height * 0.25
+            Label:
+                text: "FARE CALCULATOR"
+                color: 0, 0, 0, 1
+                font_size: "18sp"
+        BoxLayout:
+            size_hint_y: None
+            height: "40dp"
+            spacing: "6dp"
+            ToggleButton:
+                text: "SM SAN MATEO → SAN JOSE"
+                group: "route"
+                state: "down"
+                on_release: root.set_route("sm_to_sj")
+                background_color: 0, 0, 0, 0
+                color: 0, 0, 0, 1
+                font_size: "12sp"
+                on_press: app.animate_press(self)
+                canvas.before:
+                    Color:
+                        rgba: peach
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [self.height * 0.25, self.height * 0.25, self.height * 0.25, self.height * 0.25]
+                canvas.after:
+                    Color:
+                        rgba: peach_border
+                    Line:
+                        width: 1
+                        rounded_rectangle: self.x, self.y, self.width, self.height, self.height * 0.25
+            ToggleButton:
+                text: "SAN JOSE → SM SAN MATEO"
+                group: "route"
+                on_release: root.set_route("sj_to_sm")
+                background_color: 0, 0, 0, 0
+                color: 0, 0, 0, 1
+                font_size: "12sp"
+                on_press: app.animate_press(self)
+                canvas.before:
+                    Color:
+                        rgba: peach
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [self.height * 0.25, self.height * 0.25, self.height * 0.25, self.height * 0.25]
+                canvas.after:
+                    Color:
+                        rgba: peach_border
+                    Line:
+                        width: 1
+                        rounded_rectangle: self.x, self.y, self.width, self.height, self.height * 0.25
+        BoxLayout:
+            size_hint_y: None
+            height: "40dp"
+            spacing: "6dp"
+            FareTypeButton:
+                id: fare_regular
+                text: "REGULAR"
+                group: "fare_type"
+                state: "down"
+                on_release: root.set_fare_type("regular")
+            FareTypeButton:
+                id: fare_student
+                text: "STUDENT"
+                group: "fare_type"
+                on_release: root.set_fare_type("student")
+            FareTypeButton:
+                id: fare_senior
+                text: "SENIOR"
+                group: "fare_type"
+                on_release: root.set_fare_type("senior")
+            FareTypeButton:
+                id: fare_pwd
+                text: "PWD"
+                group: "fare_type"
+                on_release: root.set_fare_type("pwd")
+        BoxLayout:
+            spacing: "8dp"
+            BoxLayout:
+                orientation: "vertical"
+                spacing: "4dp"
+                Label:
+                    text: "START"
+                    color: 0, 0, 0, 1
+                    font_size: "14sp"
+                    size_hint_y: None
+                    height: "20dp"
+                ScrollView:
+                    do_scroll_x: False
+                    AnchorLayout:
+                        anchor_x: "center"
+                        anchor_y: "top"
+                        size_hint_y: None
+                        height: start_grid.minimum_height
+                        GridLayout:
+                            id: start_grid
+                            cols: 3
+                            size_hint_x: 1
+                            size_hint_y: None
+                            spacing: "8dp"
+                            padding: "6dp"
+                            row_force_default: True
+                            col_force_default: True
+                            col_default_width: max(dp(64), (self.parent.width - dp(28)) / 3)
+                            row_default_height: self.col_default_width
+                            width: self.minimum_width
+                            height: self.minimum_height
+            BoxLayout:
+                orientation: "vertical"
+                spacing: "4dp"
+                Label:
+                    text: "END"
+                    color: 0, 0, 0, 1
+                    font_size: "14sp"
+                    size_hint_y: None
+                    height: "20dp"
+                ScrollView:
+                    do_scroll_x: False
+                    AnchorLayout:
+                        anchor_x: "center"
+                        anchor_y: "top"
+                        size_hint_y: None
+                        height: end_grid.minimum_height
+                        GridLayout:
+                            id: end_grid
+                            cols: 3
+                            size_hint_x: 1
+                            size_hint_y: None
+                            spacing: "8dp"
+                            padding: "6dp"
+                            row_force_default: True
+                            col_force_default: True
+                            col_default_width: max(dp(64), (self.parent.width - dp(28)) / 3)
+                            row_default_height: self.col_default_width
+                            width: self.minimum_width
+                            height: self.minimum_height
+        BoxLayout:
+            size_hint_y: None
+            height: "40dp"
+            spacing: "8dp"
+            Label:
+                text: "ADD COMMUTER"
+                size_hint_x: None
+                width: "120dp"
+                color: 0, 0, 0, 1
+                font_size: "12sp"
+            Button:
+                text: "+"
+                size_hint_x: None
+                width: "48dp"
+                on_release: root.add_commuter_fare()
+                background_color: 0, 0, 0, 0
+                color: 0, 0, 0, 1
+                font_size: "18sp"
+                on_press: app.animate_press(self)
+                canvas.before:
+                    Color:
+                        rgba: peach
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [self.height * 0.25, self.height * 0.25, self.height * 0.25, self.height * 0.25]
+                canvas.after:
+                    Color:
+                        rgba: peach_border
+                    Line:
+                        width: 1
+                        rounded_rectangle: self.x, self.y, self.width, self.height, self.height * 0.25
+            Button:
+                text: "="
+                size_hint_x: None
+                width: "48dp"
+                on_release: root.calculate_total()
+                background_color: 0, 0, 0, 0
+                color: 0, 0, 0, 1
+                font_size: "18sp"
+                on_press: app.animate_press(self)
+                canvas.before:
+                    Color:
+                        rgba: peach
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [self.height * 0.25, self.height * 0.25, self.height * 0.25, self.height * 0.25]
+                canvas.after:
+                    Color:
+                        rgba: peach_border
+                    Line:
+                        width: 1
+                        rounded_rectangle: self.x, self.y, self.width, self.height, self.height * 0.25
+        BoxLayout:
+            size_hint_y: None
+            height: "72dp"
+            orientation: "vertical"
+            spacing: "4dp"
+            Label:
+                id: fare_label
+                text: "Select start and end"
+                color: 0, 0, 0, 1
+                font_size: "20sp"
+            Label:
+                id: total_label
+                text: ""
+                color: 0, 0, 0, 1
+                font_size: "20sp"
+        Button:
+            text: "RESET"
+            size_hint_y: None
+            height: "44dp"
+            on_release: root.reset_all()
+            background_color: 0, 0, 0, 0
+            color: 0, 0, 0, 1
+            font_size: "14sp"
+            on_press: app.animate_press(self)
+            canvas.before:
+                Color:
+                    rgba: peach
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [self.height * 0.25, self.height * 0.25, self.height * 0.25, self.height * 0.25]
+            canvas.after:
+                Color:
+                    rgba: peach_border
+                Line:
+                    width: 1
+                    rounded_rectangle: self.x, self.y, self.width, self.height, self.height * 0.25
