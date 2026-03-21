@@ -1,6 +1,7 @@
 #:set peach_light (1, 0.92, 0.88, 1)
 #:set peach (1, 0.84, 0.74, 1)
 #:set peach_dark (0.96, 0.72, 0.6, 1)
+#:set peach_selected (0.9, 0.58, 0.42, 1)
 #:set peach_border (0.9, 0.6, 0.5, 1)
 #:import dp kivy.metrics.dp
 #:set tile_size "92dp"
@@ -58,14 +59,14 @@ RootManager:
     size_hint: 1, 1
     background_color: 0, 0, 0, 0
     color: 0, 0, 0, 1
-    font_size: "11sp"
-    text_size: self.width - dp(8), self.height - dp(8)
+    font_size: "10sp"
+    text_size: self.width - dp(6), self.height - dp(6)
     halign: "center"
     valign: "middle"
     on_press: app.animate_press(self)
     canvas.before:
         Color:
-            rgba: (0.98, 0.78, 0.66, 1) if self.state == "down" else peach
+            rgba: peach_selected if self.state == "down" else peach
         RoundedRectangle:
             pos: self.pos
             size: self.size
@@ -84,7 +85,7 @@ RootManager:
     on_press: app.animate_press(self)
     canvas.before:
         Color:
-            rgba: (0.98, 0.78, 0.66, 1) if self.state == "down" else peach
+            rgba: peach_selected if self.state == "down" else peach
         RoundedRectangle:
             pos: self.pos
             size: self.size
@@ -100,7 +101,7 @@ RootManager:
     name: "fare"
     BoxLayout:
         orientation: "vertical"
-        padding: "12dp"
+        padding: "16dp"
         spacing: "8dp"
         canvas.before:
             Color:
@@ -120,10 +121,10 @@ RootManager:
             Button:
                 text: "BACK"
                 size_hint_x: None
-                width: "76dp"
+                width: "64dp"
                 background_color: 0, 0, 0, 0
                 color: 0, 0, 0, 1
-                font_size: "14sp"
+                font_size: "12sp"
                 on_release: app.root.current = "start"
                 on_press: app.animate_press(self)
                 canvas.before:
@@ -145,8 +146,9 @@ RootManager:
                 font_size: "18sp"
         BoxLayout:
             size_hint_y: None
-            height: "40dp"
+            height: "34dp"
             spacing: "6dp"
+            padding: "4dp", "0dp"
             ToggleButton:
                 text: "SM SAN MATEO → SAN JOSE"
                 group: "route"
@@ -154,7 +156,10 @@ RootManager:
                 on_release: root.set_route("sm_to_sj")
                 background_color: 0, 0, 0, 0
                 color: 0, 0, 0, 1
-                font_size: "12sp"
+                font_size: "11sp"
+                text_size: self.width - dp(12), self.height - dp(6)
+                halign: "center"
+                valign: "middle"
                 on_press: app.animate_press(self)
                 canvas.before:
                     Color:
@@ -175,7 +180,10 @@ RootManager:
                 on_release: root.set_route("sj_to_sm")
                 background_color: 0, 0, 0, 0
                 color: 0, 0, 0, 1
-                font_size: "12sp"
+                font_size: "11sp"
+                text_size: self.width - dp(12), self.height - dp(6)
+                halign: "center"
+                valign: "middle"
                 on_press: app.animate_press(self)
                 canvas.before:
                     Color:
@@ -215,66 +223,27 @@ RootManager:
                 text: "PWD"
                 group: "fare_type"
                 on_release: root.set_fare_type("pwd")
-        BoxLayout:
-            spacing: "8dp"
-            BoxLayout:
-                orientation: "vertical"
-                spacing: "4dp"
-                Label:
-                    text: "START"
-                    color: 0, 0, 0, 1
-                    font_size: "14sp"
+        ScrollView:
+            do_scroll_x: False
+            size_hint_y: 1
+            AnchorLayout:
+                anchor_x: "center"
+                anchor_y: "top"
+                size_hint_y: None
+                height: places_grid.minimum_height
+                GridLayout:
+                    id: places_grid
+                    cols: min(4, max(4, int(self.width / dp(56))))
+                    size_hint_x: 1
                     size_hint_y: None
-                    height: "20dp"
-                ScrollView:
-                    do_scroll_x: False
-                    AnchorLayout:
-                        anchor_x: "center"
-                        anchor_y: "top"
-                        size_hint_y: None
-                        height: start_grid.minimum_height
-                        GridLayout:
-                            id: start_grid
-                            cols: 3
-                            size_hint_x: 1
-                            size_hint_y: None
-                            spacing: "8dp"
-                            padding: "6dp"
-                            row_force_default: True
-                            col_force_default: True
-                            col_default_width: max(dp(64), (self.parent.width - dp(28)) / 3)
-                            row_default_height: self.col_default_width
-                            width: self.minimum_width
-                            height: self.minimum_height
-            BoxLayout:
-                orientation: "vertical"
-                spacing: "4dp"
-                Label:
-                    text: "END"
-                    color: 0, 0, 0, 1
-                    font_size: "14sp"
-                    size_hint_y: None
-                    height: "20dp"
-                ScrollView:
-                    do_scroll_x: False
-                    AnchorLayout:
-                        anchor_x: "center"
-                        anchor_y: "top"
-                        size_hint_y: None
-                        height: end_grid.minimum_height
-                        GridLayout:
-                            id: end_grid
-                            cols: 3
-                            size_hint_x: 1
-                            size_hint_y: None
-                            spacing: "8dp"
-                            padding: "6dp"
-                            row_force_default: True
-                            col_force_default: True
-                            col_default_width: max(dp(64), (self.parent.width - dp(28)) / 3)
-                            row_default_height: self.col_default_width
-                            width: self.minimum_width
-                            height: self.minimum_height
+                    spacing: "8dp"
+                    padding: "16dp", "8dp"
+                    row_force_default: True
+                    col_force_default: True
+                    col_default_width: min(dp(72), max(dp(52), (self.width - dp(32) - (self.cols - 1) * dp(8)) / self.cols))
+                    row_default_height: self.col_default_width
+                    width: self.parent.width
+                    height: self.minimum_height
         BoxLayout:
             size_hint_y: None
             height: "40dp"
@@ -336,7 +305,7 @@ RootManager:
             spacing: "4dp"
             Label:
                 id: fare_label
-                text: "Select start and end"
+                text: "Select two places"
                 color: 0, 0, 0, 1
                 font_size: "20sp"
             Label:

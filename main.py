@@ -29,9 +29,11 @@ class FareScreen(Screen):
         super().__init__(**kwargs)
         self._places_data = self._load_places()
         self._fare_by_km = self._places_data["fare_by_km"]
+        self._start_button = None
+        self._end_button = None
 
     def on_pre_enter(self, *args):
-        if not self.ids.start_grid.children:
+        if not self.ids.places_grid.children:
             self.populate_places()
         self.update_fare_display()
 
@@ -63,32 +65,30 @@ class FareScreen(Screen):
 
     def populate_places(self):
         route_places = self._places_data["routes"][self.route_key]
-        self.ids.start_grid.clear_widgets()
-        self.ids.end_grid.clear_widgets()
+        self.ids.places_grid.clear_widgets()
 
         for place in route_places:
-            start_btn = PlaceButton(
+            place_btn = PlaceButton(
                 text=place["name"].upper(),
                 place_name=place["name"],
-                group="start_place",
             )
-            start_btn.bind(on_release=self.select_start)
-            self.ids.start_grid.add_widget(start_btn)
+            place_btn.bind(on_release=self.select_place)
+            self.ids.places_grid.add_widget(place_btn)
 
-            end_btn = PlaceButton(
-                text=place["name"].upper(),
-                place_name=place["name"],
-                group="end_place",
-            )
-            end_btn.bind(on_release=self.select_end)
-            self.ids.end_grid.add_widget(end_btn)
-
-    def select_start(self, button):
-        self.selected_start = button.place_name if button.state == "down" else ""
-        self.update_fare_display()
-
-    def select_end(self, button):
-        self.selected_end = button.place_name if button.state == "down" else ""
+    def select_place(self, button):
+        if not self.selected_start:
+            self.selected_start = button.place_name
+            self._start_button = button
+            button.state = "down"
+        elif not self.selected_end and button.place_name != self.selected_start:
+            self.selected_end = button.place_name
+            self._end_button = button
+            button.state = "down"
+        else:
+            self.reset_selections(keep_totals=True)
+            self.selected_start = button.place_name
+            self._start_button = button
+            button.state = "down"
         self.update_fare_display()
 
     def increment_count(self):
@@ -101,14 +101,15 @@ class FareScreen(Screen):
             self.ids.count_label.text = str(current - 1)
             self.update_fare_display()
 
-    def reset_selections(self):
+    def reset_selections(self, keep_totals=False):
         self.selected_start = ""
         self.selected_end = ""
-        self.total_fare = "0"
-        self.commuter_count = "0"
-        for widget in list(self.ids.start_grid.children) + list(
-            self.ids.end_grid.children
-        ):
+        if not keep_totals:
+            self.total_fare = "0"
+            self.commuter_count = "0"
+        self._start_button = None
+        self._end_button = None
+        for widget in list(self.ids.places_grid.children):
             if isinstance(widget, ToggleButton):
                 widget.state = "normal"
 
@@ -119,7 +120,7 @@ class FareScreen(Screen):
 
     def update_fare_display(self):
         if not self.selected_start or not self.selected_end:
-            self.ids.fare_label.text = "Select start and end"
+            self.ids.fare_label.text = "Select two places"
             if self.commuter_count == "0":
                 self.ids.total_label.text = ""
             else:
@@ -148,7 +149,7 @@ class FareScreen(Screen):
 
     def add_commuter_fare(self):
         if not self.selected_start or not self.selected_end:
-            self.ids.fare_label.text = "Select start and end"
+            self.ids.fare_label.text = "Select two places"
             return
 
         if not self.fare_type:
@@ -167,9 +168,9 @@ class FareScreen(Screen):
 
         # Keep start selected for the next commuter, clear end only.
         self.selected_end = ""
-        for widget in list(self.ids.end_grid.children):
-            if isinstance(widget, ToggleButton):
-                widget.state = "normal"
+        if self._end_button is not None:
+            self._end_button.state = "normal"
+            self._end_button = None
 
         self.reset_fare_type_selection(default=None)
         self.update_fare_display()
@@ -181,7 +182,7 @@ class FareScreen(Screen):
                     f"Total: {self.total_fare} pesos • {self.commuter_count} commuters"
                 )
             else:
-                self.ids.fare_label.text = "Select start and end"
+                self.ids.fare_label.text = "Select two places"
             return
 
         if not self.fare_type:
