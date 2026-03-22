@@ -1,13 +1,13 @@
 [app]
 
 # (str) Title of your application
-title = Jeepney Fare Guide
+title = Jeepney Fare Calculator
 
 # (str) Package name
-package.name = jeepneyfareguide3
+package.name = jeepneyfarecalculator
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = org.micacristobal3
+package.domain = org.micacristobal
 
 # (str) Source code where the main.py live
 source.dir = .
