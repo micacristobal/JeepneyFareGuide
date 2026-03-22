@@ -3,6 +3,7 @@
 #:set peach_dark (0.96, 0.72, 0.6, 1)
 #:set peach_selected (0.9, 0.58, 0.42, 1)
 #:set peach_border (0.9, 0.6, 0.5, 1)
+#:set peach_text (0.65, 0.36, 0.25, 1)
 #:import dp kivy.metrics.dp
 #:set tile_size "92dp"
 
@@ -12,55 +13,75 @@ RootManager:
 
 <StartScreen>:
     name: "start"
-    BoxLayout:
-        orientation: "vertical"
-        padding: "20dp"
-        spacing: "16dp"
+    FloatLayout:
         canvas.before:
             Color:
                 rgba: peach_light
             Rectangle:
                 pos: self.pos
                 size: self.size
-            Color:
-                rgba: peach
-            Rectangle:
-                pos: self.pos[0], self.pos[1] + self.height * 0.45
-                size: self.size[0], self.height * 0.55
-        Label:
-            text: "JEEPNEY FARE GUIDE"
-            font_size: "26sp"
-            color: 0, 0, 0, 1
-            size_hint_y: 0.4
-        Button:
-            text: "START"
-            size_hint: 1, None
-            height: "48dp"
-            background_color: 0, 0, 0, 0
-            color: 0, 0, 0, 1
-            font_size: "16sp"
-            on_release: app.root.current = "fare"
-            on_press: app.animate_press(self)
-            canvas.before:
-                Color:
-                    rgba: peach
-                RoundedRectangle:
-                    pos: self.pos
-                    size: self.size
-                    radius: [self.height * 0.25, self.height * 0.25, self.height * 0.25, self.height * 0.25]
-            canvas.after:
-                Color:
-                    rgba: peach_border
-                Line:
-                    width: 1
-                    rounded_rectangle: self.x, self.y, self.width, self.height, self.height * 0.25
+        Image:
+            source: "data/firstpage.png"
+            allow_stretch: True
+            keep_ratio: True
+            size: self.size
+            pos: self.pos
+        BoxLayout:
+            orientation: "vertical"
+            padding: "20dp", "40dp", "20dp", "20dp"
+            spacing: "16dp"
+            size_hint: 1, 1
+            Widget:
+                size_hint_y: 0.05
+            Label:
+                text: "JEEPNEY FARE GUIDE"
+                font_size: "26sp"
+                color: peach_text
+                size_hint_y: None
+                height: "40dp"
+            Widget:
+                size_hint_y: 0.65
+            Widget:
+                size_hint_y: None
+                height: "24dp"
+            AnchorLayout:
+                size_hint_y: None
+                height: "60dp"
+                anchor_x: "center"
+                anchor_y: "center"
+                Button:
+                    text: "START"
+                    size_hint: None, None
+                    width: "180dp"
+                    height: "48dp"
+                    background_color: 0, 0, 0, 0
+                    color: peach_text
+                    font_size: "16sp"
+                    on_release: app.root.current = "fare"
+                    on_press: app.animate_press(self)
+                    canvas.before:
+                        Color:
+                            rgba: peach
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [self.height * 0.25, self.height * 0.25, self.height * 0.25, self.height * 0.25]
+                    canvas.after:
+                        Color:
+                            rgba: peach_border
+                        Line:
+                            width: 1
+                            rounded_rectangle: self.x, self.y, self.width, self.height, self.height * 0.25
+            Widget:
+                size_hint_y: 0.2
 
 <PlaceButton>:
     size_hint: 1, 1
     background_color: 0, 0, 0, 0
     color: 0, 0, 0, 1
-    font_size: "10sp"
-    text_size: self.width - dp(6), self.height - dp(6)
+    font_size: "11sp"
+    bold: True
+    text_size: self.width - dp(4), self.height - dp(4)
     halign: "center"
     valign: "middle"
     on_press: app.animate_press(self)
@@ -82,6 +103,24 @@ RootManager:
     background_color: 0, 0, 0, 0
     color: 0, 0, 0, 1
     font_size: "12sp"
+    on_press: app.animate_press(self)
+    canvas.before:
+        Color:
+            rgba: peach_selected if self.state == "down" else peach
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [self.height * 0.25, self.height * 0.25, self.height * 0.25, self.height * 0.25]
+    canvas.after:
+        Color:
+            rgba: peach_border
+        Line:
+            width: 1
+            rounded_rectangle: self.x, self.y, self.width, self.height, self.height * 0.25
+
+<ActionButton@Button>:
+    background_color: 0, 0, 0, 0
+    color: 0, 0, 0, 1
     on_press: app.animate_press(self)
     canvas.before:
         Color:
@@ -156,7 +195,8 @@ RootManager:
                 on_release: root.set_route("sm_to_sj")
                 background_color: 0, 0, 0, 0
                 color: 0, 0, 0, 1
-                font_size: "11sp"
+                font_size: "12sp"
+                bold: True
                 text_size: self.width - dp(12), self.height - dp(6)
                 halign: "center"
                 valign: "middle"
@@ -180,7 +220,8 @@ RootManager:
                 on_release: root.set_route("sj_to_sm")
                 background_color: 0, 0, 0, 0
                 color: 0, 0, 0, 1
-                font_size: "11sp"
+                font_size: "12sp"
+                bold: True
                 text_size: self.width - dp(12), self.height - dp(6)
                 halign: "center"
                 valign: "middle"
@@ -234,7 +275,7 @@ RootManager:
                 GridLayout:
                     id: places_grid
                     cols: min(4, max(4, int(self.width / dp(56))))
-                    size_hint_x: 1
+                    size_hint_x: None
                     size_hint_y: None
                     spacing: "8dp"
                     padding: "16dp", "8dp"
@@ -242,7 +283,7 @@ RootManager:
                     col_force_default: True
                     col_default_width: min(dp(72), max(dp(52), (self.width - dp(32) - (self.cols - 1) * dp(8)) / self.cols))
                     row_default_height: self.col_default_width
-                    width: self.parent.width
+                    width: min(self.parent.width, dp(360))
                     height: self.minimum_height
         BoxLayout:
             size_hint_y: None
@@ -254,50 +295,18 @@ RootManager:
                 width: "120dp"
                 color: 0, 0, 0, 1
                 font_size: "12sp"
-            Button:
+            ActionButton:
                 text: "+"
                 size_hint_x: None
                 width: "48dp"
                 on_release: root.add_commuter_fare()
-                background_color: 0, 0, 0, 0
-                color: 0, 0, 0, 1
                 font_size: "18sp"
-                on_press: app.animate_press(self)
-                canvas.before:
-                    Color:
-                        rgba: peach
-                    RoundedRectangle:
-                        pos: self.pos
-                        size: self.size
-                        radius: [self.height * 0.25, self.height * 0.25, self.height * 0.25, self.height * 0.25]
-                canvas.after:
-                    Color:
-                        rgba: peach_border
-                    Line:
-                        width: 1
-                        rounded_rectangle: self.x, self.y, self.width, self.height, self.height * 0.25
-            Button:
+            ActionButton:
                 text: "="
                 size_hint_x: None
                 width: "48dp"
                 on_release: root.calculate_total()
-                background_color: 0, 0, 0, 0
-                color: 0, 0, 0, 1
                 font_size: "18sp"
-                on_press: app.animate_press(self)
-                canvas.before:
-                    Color:
-                        rgba: peach
-                    RoundedRectangle:
-                        pos: self.pos
-                        size: self.size
-                        radius: [self.height * 0.25, self.height * 0.25, self.height * 0.25, self.height * 0.25]
-                canvas.after:
-                    Color:
-                        rgba: peach_border
-                    Line:
-                        width: 1
-                        rounded_rectangle: self.x, self.y, self.width, self.height, self.height * 0.25
         BoxLayout:
             size_hint_y: None
             height: "72dp"
@@ -313,25 +322,10 @@ RootManager:
                 text: ""
                 color: 0, 0, 0, 1
                 font_size: "20sp"
-        Button:
+        ActionButton:
             text: "RESET"
             size_hint_y: None
             height: "44dp"
+            size_hint_x: 1
             on_release: root.reset_all()
-            background_color: 0, 0, 0, 0
-            color: 0, 0, 0, 1
             font_size: "14sp"
-            on_press: app.animate_press(self)
-            canvas.before:
-                Color:
-                    rgba: peach
-                RoundedRectangle:
-                    pos: self.pos
-                    size: self.size
-                    radius: [self.height * 0.25, self.height * 0.25, self.height * 0.25, self.height * 0.25]
-            canvas.after:
-                Color:
-                    rgba: peach_border
-                Line:
-                    width: 1
-                    rounded_rectangle: self.x, self.y, self.width, self.height, self.height * 0.25

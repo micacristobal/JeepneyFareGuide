@@ -38,6 +38,8 @@ class FareScreen(Screen):
     def on_pre_enter(self, *args):
         if not self.ids.places_grid.children:
             self.populate_places()
+        if not self.fare_type:
+            self.reset_fare_type_selection(default="regular")
         self.update_fare_display()
 
     def _load_places(self):
@@ -175,7 +177,7 @@ class FareScreen(Screen):
             self._end_button.state = "normal"
             self._end_button = None
 
-        self.reset_fare_type_selection(default=None)
+        self.reset_fare_type_selection(default="regular")
         self.update_fare_display()
 
     def calculate_total(self):

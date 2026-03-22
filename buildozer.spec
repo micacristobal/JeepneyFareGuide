@@ -4,10 +4,10 @@
 title = Jeepney Fare Guide
 
 # (str) Package name
-package.name = jeepneyfareguide2
+package.name = jeepneyfareguide3
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = org.micacristobal
+package.domain = org.micacristobal3
 
 # (str) Source code where the main.py live
 source.dir = .
