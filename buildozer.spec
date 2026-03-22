@@ -4,10 +4,10 @@
 title = Jeepney Fare Guide
 
 # (str) Package name
-package.name = jeepneyfareguide
+package.name = jeepneyfareguide2
 
 # (str) Package domain (needed for android/ios packaging)
-package.domain = org.micaela
+package.domain = org.micacristobal
 
 # (str) Source code where the main.py live
 source.dir = .
@@ -29,7 +29,7 @@ source.include_exts = py,kv,json,png,jpg,atlas
 #source.exclude_patterns = license,images/*/*.jpg
 
 # (str) Application versioning (method 1)
-version = 0.1
+version = 0.2
 
 # (str) Application versioning (method 2)
 # version.regex = __version__ = ['"](.*)['"]

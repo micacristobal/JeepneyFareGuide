@@ -29,6 +29,9 @@ class FareScreen(Screen):
         super().__init__(**kwargs)
         self._places_data = self._load_places()
         self._fare_by_km = self._places_data["fare_by_km"]
+        self._fare_overrides = self._normalize_overrides(
+            self._places_data.get("fare_overrides", {})
+        )
         self._start_button = None
         self._end_button = None
 
@@ -208,12 +211,31 @@ class FareScreen(Screen):
         return abs(km_map[start] - km_map[end])
 
     def _get_base_fare(self, km_distance):
+        override = self._get_override_fare(self.selected_start, self.selected_end)
+        if override is not None:
+            return override
         key = str(km_distance)
         if key in self._fare_by_km:
             return self._fare_by_km[key]
         if km_distance <= 4:
             return 13
         return 13 + (km_distance - 4)
+
+    def _get_override_fare(self, start, end):
+        if not start or not end:
+            return None
+        key = "|".join(sorted((start, end)))
+        return self._fare_overrides.get(key)
+
+    def _normalize_overrides(self, overrides):
+        normalized = {}
+        for key, value in overrides.items():
+            parts = [part.strip() for part in key.split("|") if part.strip()]
+            if len(parts) != 2:
+                continue
+            normalized_key = "|".join(sorted(parts))
+            normalized[normalized_key] = value
+        return normalized
 
     def _apply_discount(self, base_fare):
         if self.fare_type == "regular":
